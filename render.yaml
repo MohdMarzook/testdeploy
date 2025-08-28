@@ -10,9 +10,6 @@ services:
     region: ohio # Choose deployment region
     healthCheckPath: /health # Add health check endpoint
     numInstances: 1 # Scaling configuration
-    ports:
-      - port: 5000
-        protocol: http # Explicitly define protocol
     envVars:
       - key: DATABASE_URL
         fromDatabase:
@@ -32,9 +29,6 @@ services:
     buildFilter:
       paths:
         - frontend/** # Only deploy when frontend files change
-    ports:
-      - port: 80
-        protocol: http
     envVars:
       - key: API_URL
         value: https://my-api.onrender.com
