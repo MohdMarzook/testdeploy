@@ -1,23 +1,50 @@
+# Render deployment configuration
+
 services:
+  # Backend API service
   - type: web
     name: my-api
     env: docker
     dockerfilePath: ./backend/Dockerfile
+    plan: starter # Specify instance size
+    region: ohio # Choose deployment region
+    healthCheckPath: /health # Add health check endpoint
+    numInstances: 1 # Scaling configuration
     ports:
-      - 5000
+      - port: 5000
+        protocol: http # Explicitly define protocol
     envVars:
-      # Render will automatically inject the database URL here
       - key: DATABASE_URL
-        value: ${db.url}
-    
+        fromDatabase:
+          name: db
+          property: connectionString
+      - key: NODE_ENV
+        value: production
+    autoDeploy: true # Enable auto-deployment
+
+  # Frontend service
   - type: web
     name: my-frontend
     env: docker
     dockerfilePath: ./frontend/Dockerfile
+    plan: starter
+    region: ohio
+    buildFilter:
+      paths:
+        - frontend/** # Only deploy when frontend files change
     ports:
-      - 80
+      - port: 80
+        protocol: http
+    envVars:
+      - key: API_URL
+        value: https://my-api.onrender.com
+    autoDeploy: true
 
+# Database configuration
 databases:
   - name: db
     plan: free
     databaseName: my_database_name
+    ipAllowList: # Restrict database access
+      - source: 0.0.0.0/0
+        description: Allow all (consider restricting this)
