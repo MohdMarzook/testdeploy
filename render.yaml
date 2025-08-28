@@ -18,7 +18,7 @@ services:
       - 80
 
   # This creates a PostgreSQL database service
-  - type: psql
+  - type: postgres
     name: db
     plan: free
     databaseName: my_database_name
