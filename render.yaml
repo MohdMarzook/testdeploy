@@ -17,8 +17,7 @@ services:
     ports:
       - 80
 
-  # This creates a PostgreSQL database service
-  - type: postgres
-    name: db
+databases:
+  - name: db
     plan: free
     databaseName: my_database_name
