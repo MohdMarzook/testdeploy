@@ -1,0 +1,24 @@
+services:
+  - type: web
+    name: my-api
+    env: docker
+    dockerfilePath: ./backend/Dockerfile
+    ports:
+      - 5000
+    envVars:
+      # Render will automatically inject the database URL here
+      - key: DATABASE_URL
+        value: ${db.url}
+    
+  - type: web
+    name: my-frontend
+    env: docker
+    dockerfilePath: ./frontend/Dockerfile
+    ports:
+      - 80
+
+  # This creates a PostgreSQL database service
+  - type: psql
+    name: db
+    plan: free
+    databaseName: my_database_name

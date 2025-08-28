@@ -1,0 +1,20 @@
+# Use an official Python runtime as the base image for the backend
+FROM python:3.11-slim
+
+# Set the working directory inside the container
+WORKDIR /app
+
+# Install the required packages.
+# Copying requirements.txt separately is a best practice for Docker caching.
+COPY requirements.txt ./
+RUN pip install --no-cache-dir -r requirements.txt
+
+# Copy the rest of the application code
+COPY . .
+
+# Expose port 5000, which is the port our Flask app will listen on
+EXPOSE 5000
+
+# This is the "start command" for the container.
+# It tells the container to run the Flask application.
+CMD ["python", "app.py"]
