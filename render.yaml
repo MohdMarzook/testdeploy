@@ -6,10 +6,9 @@ services:
     name: my-api
     env: docker
     dockerfilePath: ./backend/Dockerfile
-    plan: starter # Specify instance size
-    region: ohio # Choose deployment region
-    healthCheckPath: /health # Add health check endpoint
-    numInstances: 1 # Scaling configuration
+    plan: free  # Changed to free tier
+    region: ohio
+    healthCheckPath: /health
     envVars:
       - key: DATABASE_URL
         fromDatabase:
@@ -17,18 +16,18 @@ services:
           property: connectionString
       - key: NODE_ENV
         value: production
-    autoDeploy: true # Enable auto-deployment
+    autoDeploy: true
 
   # Frontend service
   - type: web
     name: my-frontend
     env: docker
     dockerfilePath: ./frontend/Dockerfile
-    plan: starter
+    plan: free  # Changed to free tier
     region: ohio
     buildFilter:
       paths:
-        - frontend/** # Only deploy when frontend files change
+        - frontend/**
     envVars:
       - key: API_URL
         value: https://my-api.onrender.com
@@ -39,6 +38,6 @@ databases:
   - name: db
     plan: free
     databaseName: my_database_name
-    ipAllowList: # Restrict database access
+    ipAllowList:
       - source: 0.0.0.0/0
-        description: Allow all (consider restricting this)
+        description: Allow all
